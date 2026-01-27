@@ -5,6 +5,7 @@ import {
   decrement,
   increment,
   reset,
+  toogleCustomInput,
 } from './counter.actions';
 
 export const counterReducer = createReducer(
@@ -20,5 +21,8 @@ export const counterReducer = createReducer(
   }),
   on(customIncrement, (state, action) => {
     return { ...state, counter: state.counter + action.value };
-  })
+  }),
+  on(toogleCustomInput, (state) => {
+    return { ...state, toogle: !state.toogle };
+  }),
 );

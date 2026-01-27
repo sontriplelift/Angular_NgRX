@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CounterState } from '../states/counter.state';
-import { customIncrement } from '../states/counter.actions';
+import { customIncrement, toogleCustomInput } from '../states/counter.actions';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-custom-input',
@@ -10,10 +11,26 @@ import { customIncrement } from '../states/counter.actions';
 })
 export class CustomInputComponent {
   customValue = 0;
+  showCustomInput = false;
+  toogleSubscription: Subscription | null = null;
 
   constructor(private store: Store<{ counter: CounterState }>) {}
 
+  ngOnInit() {
+    this.toogleSubscription = this.store.select('counter').subscribe((data) => {
+      this.showCustomInput = data.toogle;
+    })
+  }
+
   onCustomIncrement() {
     this.store.dispatch(customIncrement({ value: Number(this.customValue) }));
+  }
+
+  onToogleCustomInput() {
+    this.store.dispatch(toogleCustomInput());
+  }
+
+  ngOnDestroy() {
+    this.toogleSubscription?.unsubscribe();
   }
 }
